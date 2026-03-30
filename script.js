@@ -5,40 +5,26 @@ function getNumberValue(id) {
     return isNaN(value) ? 0 : value;
 }
 
-function toggleSections() {
-    const calcType = document.getElementById('calcType')?.value || 'pps';
-    const ppsSection = document.getElementById('ppsSection');
-    const ngtSection = document.getElementById('ngtSection');
-    
-    if (!ppsSection || !ngtSection) return;
-    
-    if (calcType === 'pps') {
-        ppsSection.style.display = 'block';
-        ngtSection.style.display = 'none';
-    } else if (calcType === 'ngt') {
-        ppsSection.style.display = 'none';
-        ngtSection.style.display = 'block';
-    } else {
-        ppsSection.style.display = 'block';
-        ngtSection.style.display = 'block';
-    }
-}
-
 function calculate() {
     console.log("Calculate started"); 
     
-    const calcType = document.getElementById('calcType')?.value || 'pps';
+    const selector = document.getElementById('calculatorSelector');
+    const selectedCalc = selector?.value || 'pps';
+    const resultsDiv = document.getElementById('results');
+    
     let results = '';
     
-    if (calcType === 'pps' || calcType === 'both') {
-        results += calculatePPS();
+    switch(selectedCalc) {
+        case 'pps':
+            results = calculatePPS();
+            break;
+        case 'ngt':
+            results = calculateNGT();
+            break;
+        default:
+            results = '<p>Выберите калькулятор</p>';
     }
     
-    if (calcType === 'ngt' || calcType === 'both') {
-        results += calculateNGT();
-    }
-    
-    const resultsDiv = document.getElementById('results');
     if (resultsDiv) {
         if (results === '') {
             resultsDiv.innerHTML = '<p>Введите объем для расчета</p>';
@@ -53,42 +39,52 @@ function calculate() {
 
 function calculatePPS() {
     const ppsToPrep = getNumberValue('ppsToPrepare');
-    const ppsVolume = getNumberValue('ppsVolume');
-    const ngtVolume = getNumberValue('ngtVolume');
+    const rirType = document.getElementById('rirType')?.value || 'ovp';
     
-    if (ppsToPrep <= 0) return '<p>Введите объем ППС для приготовления</p>';
+    if (ppsToPrep <= 0) {
+        return '<p>Введите объем ППС для приготовления</p>';
+    }
+    
+    let ppsVolume, ngtVolume;
+    
+    if (rirType === 'ovp') {
+        ppsVolume = 30;
+        ngtVolume = 40;
+    } else {
+        ppsVolume = 20;
+        ngtVolume = 50;
+    }
     
     const totalVolume = ppsVolume + ngtVolume;
-    if (totalVolume <= 0) return '<p>Введите объемы ППС и NGT</p>';
-    
     const ppsRatio = ppsVolume / totalVolume;
     const ngtRatio = ngtVolume / totalVolume;
     
     const actualPpsVolume = ppsToPrep * ppsRatio;
     const actualNgtVolume = ppsToPrep * ngtRatio;
-    
     const factor = actualPpsVolume / 50;
     
-    const naNO2 = 6500 * factor; 
-    const paa = 800 * factor; 
+    const naNO2 = 6500 * factor;
+    const paa = 800 * factor;
     const water1 = 47.5 * factor;
     
     const nh4NO3 = 5000 * factor;
-    const acetate = 210 * factor; 
+    const acetate = 210 * factor;
     const uk = 40 * factor;
     const water2 = 46.5 * factor;
     
     const naNO2Bags = Math.ceil(naNO2 / 25);
     const paaBags = Math.ceil(paa / 25);
     const nh4NO3Bags = Math.ceil(nh4NO3 / 25);
-    
     const acetateCans = Math.ceil(acetate / 36.8);
     
-    let html = '<div style="margin-top: 20px; padding: 15px; background: #f0f0f0; border-radius: 8px;">';
-    html += '<h3 style="margin-top: 0;">Расчет ППС</h3>';
+    let rirName = (rirType === 'ovp') ? 'ОВП' : 'ОГП';
+    
+    let html = '<div class="result-block">';
+    html += '<h3>Расчет ППС</h3>';
+    html += `<p><strong>Тип РИР:</strong> ${rirName}</p>`;
     html += `<p><strong>Исходное соотношение:</strong> ППС ${ppsVolume} м³ : NGT ${ngtVolume} м³</p>`;
     html += `<p><strong>Для приготовления ${ppsToPrep} м³ ППС потребуется:</strong></p>`;
-    html += `<ul style="margin: 10px 0;">`;
+    html += `<ul>`;
     html += `<li>ППС: ${actualPpsVolume.toFixed(2)} м³</li>`;
     html += `<li>NGT: ${actualNgtVolume.toFixed(2)} м³</li>`;
     html += `</ul>`;
@@ -115,20 +111,22 @@ function calculatePPS() {
 function calculateNGT() {
     const ngtToPrep = getNumberValue('ngtToPrepare');
     
-    if (ngtToPrep <= 0) return '<p>Введите объем NGT для приготовления</p>';
+    if (ngtToPrep <= 0) {
+        return '<p>Введите объем NGT для приготовления</p>';
+    }
     
     const factor = ngtToPrep / 20;
     
     const ngtChem = 399.91 * factor;
     const chrysotile = 299.831 * factor;
-    const fiber = 30.45 * factor; 
-    const water = 19.60026 * factor; 
+    const fiber = 30.45 * factor;
+    const water = 19.60026 * factor;
     
     const ngtChemBags = Math.ceil(ngtChem / 25);
     const chrysotileBags = Math.ceil(chrysotile / 25);
     
-    let html = '<div style="margin-top: 20px; padding: 15px; background: #f0f0f0; border-radius: 8px;">';
-    html += '<h3 style="margin-top: 0;">Расчет NGT-3</h3>';
+    let html = '<div class="result-block">';
+    html += '<h3>🔧 Расчет NGT-3</h3>';
     html += `<p><strong>Для приготовления ${ngtToPrep} м³ NGT-3 потребуется:</strong></p>`;
     html += `<ul>`;
     html += `<li>NGT Chem-3: ${ngtChem.toFixed(2)} кг (${ngtChemBags} меш. по 25 кг)</li>`;
@@ -140,23 +138,3 @@ function calculateNGT() {
     
     return html;
 }
-
-document.addEventListener('DOMContentLoaded', function() {
-    const calcType = document.getElementById('calcType');
-    if (calcType) {
-        calcType.addEventListener('change', toggleSections);
-    }
-    
-    toggleSections();
-    
-    const inputs = document.querySelectorAll('input');
-    inputs.forEach(input => {
-        input.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                calculate();
-            }
-        });
-    });
-    
-    console.log("Скрипт загружен, калькулятор готов");
-});
