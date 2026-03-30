@@ -1,33 +1,131 @@
-body {
-  font-family: Arial;
-  background: #f5f5f5;
-  margin: 0;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-.container {
-  max-width: 500px;
-  margin: auto;
-  padding: 20px;
-  background: white;
-  border-radius: 12px;
+body { 
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif; 
+    margin: 0; 
+    padding: 20px; 
+    background: #f5f5f5; 
 }
 
-input, select, button {
-  width: 100%;
-  margin: 10px 0;
-  padding: 12px;
-  font-size: 16px;
+.container { 
+    max-width: 500px; 
+    margin: 0 auto; 
+    background: white; 
+    padding: 25px 20px; 
+    border-radius: 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #2196f3;
+    text-align: center;
+}
+
+h3 {
+    font-size: 18px;
+    margin: 20px 0 15px 0;
+    color: #333;
+}
+
+label {
+    display: block;
+    margin: 10px 0 5px 0;
+    font-weight: 500;
+    color: #555;
+}
+
+select, input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+select:focus, input:focus {
+    outline: none;
+    border-color: #2196f3;
 }
 
 button {
-  background: #007bff;
-  color: white;
-  border: none;
-  border-radius: 8px;
+    width: 100%;
+    padding: 14px;
+    background: #2196f3;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 18px;
+    font-weight: bold;
+    margin: 20px 0 10px 0;
+    cursor: pointer;
 }
 
-@media (min-width: 768px) {
-  .container {
-    max-width: 700px;
-  }
+button:hover {
+    background: #1976d2;
+}
+
+#results {
+    margin-top: 20px;
+}
+
+.result-block {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 10px;
+    margin-top: 15px;
+    border-left: 4px solid #2196f3;
+}
+
+.result-block h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: #2196f3;
+}
+
+.result-block h4 {
+    margin: 10px 0 5px 0;
+    color: #555;
+}
+
+.result-block ul {
+    margin: 8px 0 8px 20px;
+}
+
+.result-block li {
+    margin: 5px 0;
+}
+
+#ngtSection {
+    display: none;
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 12px;
+    }
+    
+    .container {
+        padding: 20px 15px;
+    }
+    
+    h1 {
+        font-size: 22px;
+    }
+    
+    select, input {
+        padding: 10px;
+        font-size: 15px;
+    }
+    
+    button {
+        padding: 12px;
+        font-size: 17px;
+    }
 }
