@@ -52,10 +52,10 @@
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('/sw.js')
                 .then(reg => {
-                    console.log('✅ Service Worker зарегистрирован:', reg);
+                    console.log('Service Worker зарегистрирован:', reg);
                 })
                 .catch(err => {
-                    console.error('❌ Ошибка регистрации SW:', err);
+                    console.error('Ошибка регистрации SW:', err);
                 });
         }
         
