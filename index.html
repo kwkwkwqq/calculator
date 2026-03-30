@@ -5,36 +5,41 @@
     <link rel="manifest" href="manifest.json">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
     <meta name="theme-color" content="#2196f3">
-    <title>Калькулятор ППС/NGT</title>
+    <title>Калькулятор</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
-        <h1>Калькулятор ППС/NGT</h1>
+        <h1>Калькулятор</h1>
         
-        <label>Выберите тип расчета:</label>
-        <select id="calcType">
+        <label>Выберите калькулятор:</label>
+        <select id="calculatorSelector">
             <option value="pps">ППС</option>
             <option value="ngt">NGT-3</option>
-            <option value="both">Оба</option>
         </select>
 
-        <div id="ppsSection">
-            <h3>ППС</h3>
-            <label>Объем ППС (м³):</label>
-            <input type="number" id="ppsVolume" value="50" step="0.1">
+        <div id="calculator_pps" class="calculator" data-calc-name="ППС">
+            <div class="calc-header">
+                <h3 id="calcTitle">ППС</h3>
+            </div>
             
-            <label>Объем NGT (м³):</label>
-            <input type="number" id="ngtVolume" value="50" step="0.1">
+            <label>Выберите тип РИР:</label>
+            <select id="rirType">
+                <option value="ovp">ОВП (Объем ППС: 30 м³, Объем NGT: 40 м³)</option>
+                <option value="ogp">ОГП (Объем ППС: 20 м³, Объем NGT: 50 м³)</option>
+            </select>
             
-            <label>Сколько приготовить ППС (м³):</label>
-            <input type="number" id="ppsToPrepare" value="100" step="0.1">
+            <label>Сколько приготовить (м³):</label>
+            <input type="number" id="ppsToPrepare" value="100" step="0.1" placeholder="Введите объем">
         </div>
 
-        <div id="ngtSection">
-            <h3>NGT-3</h3>
-            <label>Сколько приготовить NGT (м³):</label>
-            <input type="number" id="ngtToPrepare" value="20" step="0.1">
+        <div id="calculator_ngt" class="calculator" data-calc-name="NGT-3">
+            <div class="calc-header">
+                <h3 id="calcTitle">NGT-3</h3>
+            </div>
+            
+            <label>Сколько приготовить (м³):</label>
+            <input type="number" id="ngtToPrepare" value="20" step="0.1" placeholder="Введите объем">
         </div>
 
         <button onclick="calculate()">Рассчитать</button>
@@ -43,16 +48,39 @@
     </div>
 
     <script src="script.js"></script>
-<script>
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js')
-            .then(reg => {
-                console.log('Service Worker зарегистрирован:', reg);
-            })
-            .catch(err => {
-                console.error('Ошибка регистрации SW:', err);
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js')
+                .then(reg => {
+                    console.log('✅ Service Worker зарегистрирован:', reg);
+                })
+                .catch(err => {
+                    console.error('❌ Ошибка регистрации SW:', err);
+                });
+        }
+        
+        function switchCalculator() {
+            const selector = document.getElementById('calculatorSelector');
+            const selectedValue = selector.value;
+            
+            const allCalculators = document.querySelectorAll('.calculator');
+            allCalculators.forEach(calc => {
+                calc.style.display = 'none';
             });
-    }
-</script>
+            
+            const activeCalculator = document.getElementById(`calculator_${selectedValue}`);
+            if (activeCalculator) {
+                activeCalculator.style.display = 'block';
+            }
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            const selector = document.getElementById('calculatorSelector');
+            if (selector) {
+                selector.addEventListener('change', switchCalculator);
+                switchCalculator(); 
+            }
+        });
+    </script>
 </body>
 </html>
