@@ -126,7 +126,7 @@ function calculateNGT() {
     const chrysotileBags = Math.ceil(chrysotile / 25);
     
     let html = '<div class="result-block">';
-    html += '<h3>🔧 Расчет NGT-3</h3>';
+    html += '<h3>Расчет NGT-3</h3>';
     html += `<p><strong>Для приготовления ${ngtToPrep} м³ NGT-3 потребуется:</strong></p>`;
     html += `<ul>`;
     html += `<li>NGT Chem-3: ${ngtChem.toFixed(2)} кг (${ngtChemBags} меш. по 25 кг)</li>`;
